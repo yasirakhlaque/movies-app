@@ -1,31 +1,23 @@
 import MoviesCard from "@/components/MoviesCard";
 import Navbar from "@/components/Navbar";
-import { Movie } from "@/components/MoviesCard";
-
-async function getMovies(): Promise<Movie[]> {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/movies`, {
-      cache: 'no-store' // Always fetch fresh data
-    });
-    
-    if (!res.ok) {
-      throw new Error('Failed to fetch movies');
-    }
-    
-    const data = await res.json();
-    return data.movies || [];
-  } catch (error) {
-    console.error('Error fetching movies:', error);
-    return []; // Return empty array if fetch fails
-  }
-}
+import { getMovies } from "@/utils/getMovies";
 
 export default async function Home() {
   const movies = await getMovies();
-
   return (
-    <div className="bg-gray-900 min-h-screen">
+    <div className="bg-gray-900 min-h-screen overflow-hidden">
       <Navbar />
+      <div className="container mx-auto px-4 py-8 ">
+      <h1 className="text-white font-semibold text-center text-3xl hover:scale-110 transition-all duration-300">Recent</h1>
+        <div className="flex justify-center items-center flex-wrap gap-8 p-8">
+          {movies.slice(0, 3).map((movie) => (
+            <MoviesCard key={movie.id} movie={movie} />
+          ))
+          }
+        </div>
+      </div>
+
+      <h1 className="text-white font-semibold text-3xl text-center hover:scale-110 transition-all duration-300">All Movies</h1>
       <div className="flex justify-center items-center flex-wrap gap-8 p-8">
         {movies.length === 0 ? (
           <div className="text-white text-center">
