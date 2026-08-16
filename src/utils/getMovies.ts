@@ -2,7 +2,7 @@ import { Movie } from "@/components/MoviesCard";
 import { db } from "./db";
 
 export async function getMovies() {
-        const movies = db.movie.findMany({
+        const movies = await db.movie.findMany({
             orderBy:{
                 createdAt: 'desc' 
             }
